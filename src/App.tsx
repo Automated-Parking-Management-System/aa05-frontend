@@ -1,36 +1,17 @@
-import Typography from "@mui/material/Typography";
+import { Routes, Route } from "react-router-dom";
 
-const b_img_style = {
-  backgroundImage: "url(/background_img.jpg)",
-  backgroundPosition: "center",
-  backgroundSize: "cover",
-  backgroundRepeat: "no-repeat",
-  width: "100vw",
-  height: "100vh",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-};
+import Landing from "./routes/Landing";
+import Login from "./routes/Login";
+import Signup from "./routes/Signup";
 
-const btn_style = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-};
+import RequireAuth from "./components/RequireAuth";
 
-function App() {
+export default function App() {
   return (
-    <div>
-      <div style={b_img_style}>
-        <div>
-          <Typography variant="h1" component="h2">
-            Automated Parking Management System
-          </Typography>
-          <button style={btn_style}>Get Started</button>
-        </div>
-      </div>
-    </div>
+    <Routes>
+      <Route index element={<Landing />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+    </Routes>
   );
 }
-
-export default App;
