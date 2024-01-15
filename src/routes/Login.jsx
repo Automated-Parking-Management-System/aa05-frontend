@@ -1,4 +1,5 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { Link } from "react-router-dom";
 
@@ -16,6 +17,14 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
+import { ui, uiConfig, signInUser } from "../firebase/firebase";
+
+const centerStyle = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+};
+
 function Copyright(props) {
   return (
     <Typography
@@ -32,18 +41,48 @@ function Copyright(props) {
   );
 }
 
+const defaultFormFields = {
+  email: "",
+  password: "",
+};
+
 // TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
 
 export default function Login() {
-  const handleSubmit = (event) => {
+  const [formFields, setFormFields] = useState(defaultFormFields);
+  const { email, password } = formFields;
+  const navigate = useNavigate();
+
+  const resetFormFields = () => {
+    return setFormFields(defaultFormFields);
+  };
+
+  useEffect(() => {
+    ui.start("#firebaseui-auth-container", uiConfig);
+  });
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+
+    try {
+      // Send the email and password to firebase
+      const userCredential = await signInUser(email, password);
+
+      if (userCredential) {
+        resetFormFields();
+        navigate("/home");
+      }
+    } catch (error) {
+      alert("User Sign In-Failed " + error.message);
+      console.log("User Sign In Failed", error.message);
+    }
+  };
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormFields({ ...formFields, [name]: value });
   };
 
   return (
@@ -80,6 +119,7 @@ export default function Login() {
               name="email"
               autoComplete="email"
               autoFocus
+              onChange={handleChange}
             />
             <TextField
               margin="normal"
@@ -90,6 +130,7 @@ export default function Login() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={handleChange}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -103,11 +144,12 @@ export default function Login() {
             >
               Sign In
             </Button>
-            <Grid container>
-              <Grid item xs>
+            <div id="firebaseui-auth-container"></div>
+            <Grid rowSpacing={1} container>
+              <Grid sx={centerStyle} item xs={12}>
                 <Link>Forgot password?</Link>
               </Grid>
-              <Grid item>
+              <Grid sx={centerStyle} item xs={12}>
                 <Link to="/signup">{"Don't have an account? Sign Up"}</Link>
               </Grid>
             </Grid>
