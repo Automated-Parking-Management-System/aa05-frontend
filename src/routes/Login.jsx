@@ -147,7 +147,7 @@ export default function Login() {
             <div id="firebaseui-auth-container"></div>
             <Grid rowSpacing={1} container>
               <Grid sx={centerStyle} item xs={12}>
-                <Link>Forgot password?</Link>
+                <Link to="/forgot-password">Forgot password?</Link>
               </Grid>
               <Grid sx={centerStyle} item xs={12}>
                 <Link to="/signup">{"Don't have an account? Sign Up"}</Link>

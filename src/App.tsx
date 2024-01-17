@@ -5,6 +5,8 @@ import { AuthContext } from "./context/AuthContext";
 import Login from "./routes/Login";
 import Signup from "./routes/Signup";
 import Home from "./routes/Home";
+import ForgotPassword from "./routes/forgotPassword";
+import PasswordReset from "./routes/passwordReset";
 import RequireAuth from "./components/RequireAuth";
 
 export default function App() {
@@ -29,6 +31,7 @@ export default function App() {
           </RequireAuth>
         }
       />
+      <Route path="forgot-password" element={<ForgotPassword />} />
     </Routes>
   );
 }
