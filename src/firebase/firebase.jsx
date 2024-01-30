@@ -16,7 +16,21 @@ import firebase from "firebase/compat/app";
 import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
 
+import { getApp } from "firebase/app";
+import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
+import { getDatabase, connectDatabaseEmulator } from "firebase/database";
+
+
+import {
+  connectAuthEmulator,
+  sendPasswordResetEmail,
+  confirmPasswordReset,
+} from "firebase/auth";
+
 const app = firebase.initializeApp(getFirebaseConfig());
+const functions = getFunctions(getApp());
+const db = getDatabase();
+
 export const auth = getAuth(app);
 
 // Initialize the FirebaseUI Widget using Firebase.
@@ -90,15 +104,11 @@ export const confirmUserEmail = async (oobCode) => {
   return;
 };
 
-import {
-  connectAuthEmulator,
-  sendPasswordResetEmail,
-  confirmPasswordReset,
-} from "firebase/auth";
-
-// if (process.env.NODE_ENV === 'development') {
-//   connectAuthEmulator(auth, "http://localhost:9099");
-// }
+if (process.env.NODE_ENV === 'development') {
+  connectAuthEmulator(auth, "http://localhost:9099");
+  connectFunctionsEmulator(functions, "localhost", 5001);
+  connectDatabaseEmulator(db, "localhost", 9000);
+}
 
 export const passwordReset = async (email) => {
   return await sendPasswordResetEmail(auth, email);
