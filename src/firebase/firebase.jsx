@@ -1,8 +1,7 @@
-import { getFirebaseConfig } from "./firebase-config";
+import { getFirebaseConfig } from "./firebaseConfig";
 import {
   getAuth,
   applyActionCode,
-  EmailAuthProvider,
   GoogleAuthProvider,
   signInWithEmailAndPassword,
   onAuthStateChanged,
@@ -18,8 +17,9 @@ import "firebaseui/dist/firebaseui.css";
 
 import { getApp } from "firebase/app";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
-import { getDatabase, connectDatabaseEmulator } from "firebase/database";
+import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 
+import { collection, addDoc } from "firebase/firestore";
 
 import {
   connectAuthEmulator,
@@ -28,10 +28,17 @@ import {
 } from "firebase/auth";
 
 const app = firebase.initializeApp(getFirebaseConfig());
-const functions = getFunctions(getApp());
-const db = getDatabase();
+const googleProvider = new GoogleAuthProvider();
 
 export const auth = getAuth(app);
+export const functions = getFunctions(getApp());
+export const db = getFirestore(app);
+
+if (process.env.NODE_ENV === 'development') {
+  connectAuthEmulator(auth, "http://localhost:9099");
+  connectFunctionsEmulator(functions, "localhost", 5001);
+  connectFirestoreEmulator(db, "localhost", 8080);
+}
 
 // Initialize the FirebaseUI Widget using Firebase.
 export const ui = new firebaseui.auth.AuthUI(firebase.auth());
@@ -52,8 +59,6 @@ export const uiConfig = {
     },
   ],
 };
-
-export const googleProvider = new GoogleAuthProvider();
 
 export const signInUser = async (email, password) => {
   if (!email && !password) return;
@@ -103,12 +108,6 @@ export const confirmUserEmail = async (oobCode) => {
 
   return;
 };
-
-if (process.env.NODE_ENV === 'development') {
-  connectAuthEmulator(auth, "http://localhost:9099");
-  connectFunctionsEmulator(functions, "localhost", 5001);
-  connectDatabaseEmulator(db, "localhost", 9000);
-}
 
 export const passwordReset = async (email) => {
   return await sendPasswordResetEmail(auth, email);

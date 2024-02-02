@@ -5,7 +5,7 @@ import { AuthContext } from "./context/AuthContext";
 import Login from "./routes/Login";
 import SignUp from "./routes/SignUp";
 import Home from "./routes/Home";
-import ForgotPassword from "./routes/forgotPassword";
+import ForgotPassword from "./routes/ForgotPassword";
 import RequireAuth from "./components/RequireAuth";
 
 export default function App() {
