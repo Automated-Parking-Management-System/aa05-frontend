@@ -3,10 +3,9 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import { AuthContext } from "./context/AuthContext";
 
 import Login from "./routes/Login";
-import Signup from "./routes/Signup";
+import SignUp from "./routes/SignUp";
 import Home from "./routes/Home";
 import ForgotPassword from "./routes/forgotPassword";
-import PasswordReset from "./routes/passwordReset";
 import RequireAuth from "./components/RequireAuth";
 
 export default function App() {
@@ -22,7 +21,7 @@ export default function App() {
   return (
     <Routes>
       <Route index element={<Login />} />
-      <Route path="signup" element={<Signup />} />
+      <Route path="signup" element={<SignUp />} />
       <Route
         path="home"
         element={
