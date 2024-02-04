@@ -1,17 +1,14 @@
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
+import { useEffect, useState } from "react";
 
-import CssBaseline from '@mui/material/CssBaseline';
+import Paper from '@mui/material/Paper';
 import List from '@mui/material/List';
 
 import Header from "../components/Header";
 import NavBar from "../components/NavBar";
 import ParkingLotCard from '../components/ParkingLotCard';
 
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../context/AuthContext";
-import { collection, addDoc, onSnapshot } from "firebase/firestore"; 
-import { db } from '../firebase/firebase';
+import { collection, onSnapshot } from "firebase/firestore"; 
+import { db } from '../firebase/Firebase';
 
 // const parkingLots = ["ryerson_lot.jpg", "pearson_lot.jpg"];
 const style = {
@@ -46,7 +43,6 @@ function Home() {
   return (
     <Paper style={{ maxHeight: "100%" }}>
       <Header title={"Parking Lot"} />
-      <CssBaseline />
       <Paper sx={style} elevation={3}>
         <List>
           {parkingLots?.map(({id, name, img, description}) => (
@@ -54,7 +50,7 @@ function Home() {
           ))}
         </List>
       </Paper>
-      <NavBar />
+      <NavBar nav={"home"} />
     </Paper>
   );
 }

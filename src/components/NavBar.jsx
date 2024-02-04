@@ -1,36 +1,84 @@
-import * as React from 'react';
-import BottomNavigation from '@mui/material/BottomNavigation';
-import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import FolderIcon from '@mui/icons-material/Folder';
-import RestoreIcon from '@mui/icons-material/Restore';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
+import * as React from "react";
 
-export default function NavBar() {
-  const [value, setValue] = React.useState('recents');
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogTitle from "@mui/material/DialogTitle";
+import Slide from "@mui/material/Slide";
+import BottomNavigation from "@mui/material/BottomNavigation";
+import BottomNavigationAction from "@mui/material/BottomNavigationAction";
+import LogoutIcon from "@mui/icons-material/Logout";
+import HomeIcon from "@mui/icons-material/Home";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import DataThresholdingIcon from "@mui/icons-material/DataThresholding";
+
+import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+export default function NavBar({ nav }) {
+  const { signOut } = React.useContext(AuthContext);
+  const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    if (newValue !== "logout") {
+      navigate("/" + newValue);
+    }
   };
 
   return (
-    <BottomNavigation sx={{}} value={value} onChange={handleChange}>
-    <BottomNavigationAction
-      label="Recents"
-      value="recents"
-      icon={<RestoreIcon />}
-    />
-    <BottomNavigationAction
-      label="Favorites"
-      value="favorites"
-      icon={<FavoriteIcon />}
-    />
-    <BottomNavigationAction
-      label="Nearby"
-      value="nearby"
-      icon={<LocationOnIcon />}
-    />
-    <BottomNavigationAction label="Folder" value="folder" icon={<FolderIcon />} />
-  </BottomNavigation>
+    <React.Fragment>
+      <BottomNavigation value={nav} onChange={handleChange}>
+        <BottomNavigationAction label="Home" value="home" icon={<HomeIcon />} />
+        <BottomNavigationAction
+          label="Profile"
+          value="profile"
+          icon={<AccountCircleIcon />}
+        />
+        <BottomNavigationAction
+          label="Data"
+          value="data"
+          icon={<DataThresholdingIcon />}
+        />
+        <BottomNavigationAction
+          label="Logout"
+          value="logout"
+          icon={<LogoutIcon />}
+          onClick={handleClickOpen}
+        />
+      </BottomNavigation>
+      <Dialog
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{"Are you sure you want to logout?"}</DialogTitle>
+        <DialogActions>
+          <Button
+            color="error"
+            onClick={() => {
+              signOut();
+            }}
+          >
+            Yes
+          </Button>
+          <Button onClick={handleClose}>No</Button>
+        </DialogActions>
+      </Dialog>
+    </React.Fragment>
   );
 }

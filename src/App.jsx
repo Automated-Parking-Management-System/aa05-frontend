@@ -5,6 +5,9 @@ import { AuthContext } from "./context/AuthContext";
 import Login from "./routes/Login";
 import SignUp from "./routes/SignUp";
 import Home from "./routes/Home";
+import Profile from "./routes/Profile";
+import Data from "./routes/Data";
+
 import ForgotPassword from "./routes/ForgotPassword";
 import RequireAuth from "./components/RequireAuth";
 
@@ -27,6 +30,22 @@ export default function App() {
         element={
           <RequireAuth>
             <Home />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="profile"
+        element={
+          <RequireAuth>
+            <Profile />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="data"
+        element={
+          <RequireAuth>
+            <Data />
           </RequireAuth>
         }
       />

@@ -1,13 +1,8 @@
-import { useContext, createContext, useState, useEffect } from "react";
-import { auth, signOutUser } from "../firebase/firebase";
+import { createContext, useState, useEffect } from "react";
+import { auth, signOutUser } from "../firebase/Firebase";
 import { useNavigate } from "react-router-dom";
 
-export const AuthContext = createContext({
-  // "User" comes from firebase auth-public.d.ts
-  currentUser: {} as User | null,
-  setCurrentUser: (_user: User) => {},
-  signOut: () => {},
-});
+export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState();

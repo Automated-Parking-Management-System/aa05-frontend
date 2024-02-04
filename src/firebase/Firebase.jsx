@@ -1,4 +1,4 @@
-import { getFirebaseConfig } from "./firebaseConfig";
+import { getFirebaseConfig } from "./FirebaseConfig";
 import {
   getAuth,
   applyActionCode,

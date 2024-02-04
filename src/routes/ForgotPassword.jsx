@@ -1,17 +1,19 @@
-import { FormEvent, useState } from "react";
-import { passwordReset } from "../firebase/firebase";
+import React from "react";
+import { useState } from "react";
+
+import { passwordReset } from "../firebase/Firebase";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [emailMessage, setEmailMessage] = useState(false);
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       await passwordReset(email);
       setEmailMessage(true);
-    } catch (error: any) {
+    } catch (error) {
       if (error.code === "auth/user-not-found") {
         alert("User not found, try again!");
         setEmail("");

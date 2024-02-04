@@ -1,6 +1,7 @@
+import React from "react";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { confirmThePasswordReset } from "../firebase/firebase";
+import { confirmThePasswordReset } from "../firebase/Firebase";
 
 const defaultFormFields = {
   password: "",
@@ -18,13 +19,13 @@ function PasswordReset() {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { password, confirmPassword } = formFields;
 
-  const oobCode: string | null = searchParams.get("oobCode");
+  const oobCode = searchParams.get("oobCode");
 
   const resetFormFields = () => {
     return setFormFields(defaultFormFields);
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
@@ -41,7 +42,7 @@ function PasswordReset() {
         alert("Something is wrong; try again later!");
         console.log("missing oobCode");
       }
-    } catch (error: any) {
+    } catch (error) {
       if (error.code === "auth/invalid-action-code") {
         alert("Something is wrong; try again later.");
       }
@@ -49,7 +50,7 @@ function PasswordReset() {
     }
   };
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormFields({ ...formFields, [name]: value });
   };
