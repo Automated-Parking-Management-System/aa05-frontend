@@ -5,7 +5,6 @@ import { BrowserRouter } from "react-router-dom";
 import CssBaseline from '@mui/material/CssBaseline';
 
 import { AuthProvider } from "./context/AuthContext";
-import { NavProvider } from "./context/NavContext";
 import App from "./App";
 import "./index.css";
 
@@ -14,9 +13,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <CssBaseline />
     <BrowserRouter>
       <AuthProvider>
-        <NavProvider>
-          <App />
-        </NavProvider>
+        <App />
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>,
