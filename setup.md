@@ -43,4 +43,6 @@ firebase emulators:start --only auth,firestore --import database --export-on-exi
 #### install yarn
 -- type yarn in terminal to get install commands
 npm install --global yarn
+
+#### run frontend app
 yarn dev

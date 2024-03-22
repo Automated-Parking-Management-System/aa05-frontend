@@ -1,4 +1,4 @@
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { AuthContext } from "./context/AuthContext";
 
@@ -9,11 +9,37 @@ import Profile from "./routes/Profile";
 import Data from "./routes/Data";
 
 import ForgotPassword from "./routes/ForgotPassword";
-import RequireAuth from "./components/RequireAuth";
+
+import { collection, onSnapshot } from "firebase/firestore"; 
+import { db } from "./firebase/Firebase";
+import AuthLayout from "./layout/AuthLayout";
+import QRCode from "./routes/QRCode";
+import Booking from "./routes/Booking";
 
 export default function App() {
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  const [parkingLots, setParkingLots] = useState();
+  const docRef = collection(db, `parking_lots`);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(docRef, (querySnapshot) => {
+      const parkingLotsData = querySnapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          ...doc.data()
+        };
+      });
+      console.log(parkingLotsData);
+      setParkingLots(parkingLotsData);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     if (currentUser) {
@@ -24,31 +50,22 @@ export default function App() {
   return (
     <Routes>
       <Route index element={<Login />} />
-      <Route path="signup" element={<SignUp />} />
-      <Route
-        path="home"
-        element={
-          <RequireAuth>
-            <Home />
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="profile"
-        element={
-          <RequireAuth>
-            <Profile />
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="data"
-        element={
-          <RequireAuth>
-            <Data />
-          </RequireAuth>
-        }
-      />
+      <Route path="/signup" element={<SignUp />} />
+      <Route path="/home" element={<AuthLayout />}>
+        <Route index element={<Home parkingLots={parkingLots} />} />
+        <Route path="drop-in/:lotId" element={<QRCode />} />
+        <Route path="book/:lotId" element={<Booking parkingLots={parkingLots} />} />
+      </Route>
+      <Route path="/profile" element={<AuthLayout />} >
+        <Route index element={<Profile />} />
+      </Route>
+      <Route path="/data" element={<AuthLayout />} >
+        <Route index element={<Data />} />
+      </Route>
+      {/* <Route path="home/:id" element={<ParkingLot parkingLots={parkingLots} />} /> */}
+        {/* <Route path="lot">
+          <Route path=":id" element={<RequireAuth><ParkingLot parkingLots={parkingLots} /></RequireAuth>} />
+        </Route> */}
       <Route path="forgot-password" element={<ForgotPassword />} />
     </Routes>
   );

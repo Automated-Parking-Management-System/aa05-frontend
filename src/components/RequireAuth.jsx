@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { Navigate, useLocation } from "react-router-dom";
 
-function RequireAuth({ children }) {
+const RequireAuth = ({ children }) => {
   const { currentUser } = useContext(AuthContext);
   const location = useLocation();
 
@@ -12,7 +12,11 @@ function RequireAuth({ children }) {
     return <Navigate to="/" state={{ from: location }} replace />;
   }
 
-  return children;
+  return (
+    currentUser
+      ? <Outlet />
+      : <Navigate to="" />
+  );
 }
 
 export default RequireAuth;
