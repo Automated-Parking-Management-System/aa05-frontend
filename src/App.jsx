@@ -11,7 +11,7 @@ import Data from "./routes/Data";
 import ForgotPassword from "./routes/ForgotPassword";
 
 import { collection, onSnapshot } from "firebase/firestore"; 
-import { db } from "./firebase/Firebase";
+import { firestore } from "./firebase/Firebase";
 import AuthLayout from "./layout/AuthLayout";
 import QRCode from "./routes/QRCode";
 import Booking from "./routes/Booking";
@@ -21,7 +21,7 @@ export default function App() {
   const navigate = useNavigate();
 
   const [parkingLots, setParkingLots] = useState();
-  const docRef = collection(db, `parking_lots`);
+  const docRef = collection(firestore, `parking_lots`);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(docRef, (querySnapshot) => {
