@@ -36,7 +36,7 @@ sudo apt update
 in our case we installed using the following:
 sudo apt install openjdk-11-jre-headless
 #### start emulators
-firebase emulators:start --only auth,firestore --import database --export-on-exit database
+firebase emulators:start --only auth,database,firestore --import database --export-on-exit database 
 
 ### Start app
 
