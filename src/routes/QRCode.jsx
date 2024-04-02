@@ -8,7 +8,6 @@ import NavBar from "../components/NavBar";
 import Header from "../components/Header";
 
 import { shuffle } from "../components/Shuffle";
-import { FullscreenExit } from "@mui/icons-material";
 
 const style = {
   display: "flex",
@@ -63,12 +62,16 @@ const QRCode = () => {
     qrObj[shuffled] = false;
     updateRTDB(qrObj);
 
-    try {
-      if (getRTDB(shuffled) === undefined) throw new Error("Something went wrong ...");
-      else setVerification(true);
-    } catch (error) {
-      alert(error);
-    }
+    // Setting a manual timeout to simulate the rtdb verification on the ESP side
+    setTimeout(() => {
+      try {
+        if (getRTDB(shuffled) === undefined) throw new Error("Something went wrong ...");
+        else setVerification(true);
+      } catch (error) {
+        alert(error);
+      }
+    }, 2000)
+    
   };
 
 
@@ -80,7 +83,7 @@ const QRCode = () => {
     <Paper style={{ maxHeight: "100%" }}>
       {!verification && <Typography variant="h5" >QR-Code Generated </Typography>}
       {!verification && <Typography variant="h6" >Show it to the camera </Typography>}
-      {verification && <Typography variant="h5">Gate verification successful !</Typography>}
+      {verification && <Typography variant="h5" style={{ padding: '1.5rem' }}>Gate verification successful !</Typography>}
       {!verification && <Paper sx={style} elevation={3}>
         <img style={{ margin: "5%" }} src={src}></img>
       </Paper>}
