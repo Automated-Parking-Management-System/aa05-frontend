@@ -19,6 +19,7 @@ import { getApp } from "firebase/app";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { connectDatabaseEmulator, getDatabase } from "firebase/database";
+import { getStorage, connectStorageEmulator } from "firebase/storage"
 
 import { collection, addDoc } from "firebase/firestore";
 
@@ -31,16 +32,19 @@ import {
 const app = firebase.initializeApp(getFirebaseConfig());
 const googleProvider = new GoogleAuthProvider();
 
+
 export const auth = getAuth(app);
 export const functions = getFunctions(getApp());
 export const firestore = getFirestore(app);
 export const rtdb = getDatabase(app);
+export const storage = getStorage(app);
 
 if (process.env.NODE_ENV === 'development') {
   connectAuthEmulator(auth, "http://localhost:9099");
   // connectFunctionsEmulator(functions, "localhost", 5001);
   connectFirestoreEmulator(firestore, "localhost", 8081);
   connectDatabaseEmulator(rtdb, "localhost", 9000)
+  connectStorageEmulator(storage, "localhost", 9199)
 }
 
 // Initialize the FirebaseUI Widget using Firebase.
