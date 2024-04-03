@@ -41,7 +41,7 @@ export const storage = getStorage(app);
 
 if (process.env.NODE_ENV === 'development') {
   connectAuthEmulator(auth, "http://localhost:9099");
-  // connectFunctionsEmulator(functions, "localhost", 5001);
+  connectFunctionsEmulator(functions, "localhost", 5001);
   connectFirestoreEmulator(firestore, "localhost", 8081);
   connectDatabaseEmulator(rtdb, "localhost", 9000)
   connectStorageEmulator(storage, "localhost", 9199)
