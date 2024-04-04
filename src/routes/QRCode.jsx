@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { Paper, Typography } from "@mui/material";
-import { getDatabase, ref, set, onValue } from "firebase/database";
+import { getDatabase, ref, set, onValue, remove } from "firebase/database";
 import NavBar from "../components/NavBar";
 
 import Header from "../components/Header";
@@ -32,18 +32,12 @@ const QRCode = () => {
   const getRTDB = (path) => {
     const verifyCheck = ref(rtdb, 'QR-Code/' + path);
     let isSucess = false;
-    onValue(verifyCheck, (snapshot) => {
+    onValue(verifyCheck, async (snapshot) => {
       const data = snapshot.val();
-      if (data === false) {
-        // console.log('succcess (for now)');
+      if (data === true) {
         isSucess = true;
-        // throw new Error("CAM didnt verify");  // uncomment for the future when firebase has been integrated
-        try {
-          set(ref(rtdb, 'QR-Code/' + path), true);  // Setting it true for now, CAM shud check
-        } catch (error) {
-          isSucess = false;
-          throw new Error("Doesnt matter what happens here tbh");
-        }
+        await remove(verifyCheck);
+        setVerification(true);
       }
     });
 
@@ -52,7 +46,7 @@ const QRCode = () => {
 
   const generateQRCode = () => {
     const url = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${code}`;
-    const original = currentUser.uid + "+" + lotId;
+    const original = currentUser.uid + lotId;
     const shuffled = shuffle(original);
     setCode(shuffled);
     setSrc(url);
@@ -60,20 +54,27 @@ const QRCode = () => {
     // Updating rtdb
     const qrObj = {};
     qrObj[shuffled] = false;
+    console.log(shuffled);
     updateRTDB(qrObj);
 
+
+
     // Setting a manual timeout to simulate the rtdb verification on the ESP side
-    setTimeout(() => {
-      try {
-        if (getRTDB(shuffled) === undefined) throw new Error("Something went wrong ...");
-        else setVerification(true);
-      } catch (error) {
-        alert(error);
-      }
-    }, 2000)
+    // setTimeout(() => {
+    //   try {
+    //     if (getRTDB(shuffled) === undefined) throw new Error("Something went wrong during authentication...");
+    //     else setVerification(true);
+    //   } catch (error) {
+    //     alert(error);
+    //   }
+    // }, 2000)
     
   };
 
+  useEffect(() => {
+    getRTDB(code)
+  }, [code])
+  
 
   useEffect(() => {
     generateQRCode();
