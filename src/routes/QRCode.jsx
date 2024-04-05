@@ -56,18 +56,6 @@ const QRCode = () => {
     qrObj[shuffled] = false;
     console.log(shuffled);
     updateRTDB(qrObj);
-
-
-
-    // Setting a manual timeout to simulate the rtdb verification on the ESP side
-    // setTimeout(() => {
-    //   try {
-    //     if (getRTDB(shuffled) === undefined) throw new Error("Something went wrong during authentication...");
-    //     else setVerification(true);
-    //   } catch (error) {
-    //     alert(error);
-    //   }
-    // }, 2000)
     
   };
 
