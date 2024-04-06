@@ -3,10 +3,6 @@ import { useParams } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { Paper, Typography } from "@mui/material";
 import { getDatabase, ref, set, onValue, remove } from "firebase/database";
-import NavBar from "../components/NavBar";
-
-import Header from "../components/Header";
-
 import { shuffle } from "../components/Shuffle";
 
 const style = {
@@ -25,9 +21,7 @@ const QRCode = () => {
   const [verification, setVerification] = useState(false);
   const rtdb = getDatabase();
 
-  const updateRTDB = (obj) => {
-    set(ref(rtdb, 'QR-Code/'), obj);
-  }
+  
 
   const getRTDB = (path) => {
     const verifyCheck = ref(rtdb, 'QR-Code/' + path);
@@ -38,15 +32,16 @@ const QRCode = () => {
         isSucess = true;
         await remove(verifyCheck);
         setVerification(true);
+        return;
       }
     });
-
-    return isSucess;    
+ 
+    
   }
 
   const generateQRCode = () => {
     const url = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${code}`;
-    const original = currentUser.uid + lotId;
+    const original = currentUser.uid + "+" + lotId;
     const shuffled = shuffle(original);
     setCode(shuffled);
     setSrc(url);
@@ -54,13 +49,11 @@ const QRCode = () => {
     // Updating rtdb
     const qrObj = {};
     qrObj[shuffled] = false;
-    console.log(shuffled);
-    updateRTDB(qrObj);
     
   };
 
   useEffect(() => {
-    getRTDB(code)
+    getRTDB("JdeQsCeNA1T3ZQaUtQhcHGf1s343" + "/" + "entranceAuth") // Hard setting 
   }, [code])
   
 
