@@ -29,7 +29,7 @@ import {
   confirmPasswordReset,
 } from "firebase/auth";
 
-const app = firebase.initializeApp(getFirebaseConfig());
+export const app = firebase.initializeApp(getFirebaseConfig());
 const googleProvider = new GoogleAuthProvider();
 
 
